@@ -31,3 +31,8 @@ out
 # GitBook
 doc/_book
 /_book
+
+# Ensime specific
+.ensime
+.ensime_cache/
+.ensime_lucene/

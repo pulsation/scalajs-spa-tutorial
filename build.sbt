@@ -1,8 +1,51 @@
 import sbt.Keys._
 import sbt.Project.projectToRef
 
+scalaVersion in ThisBuild := Settings.versions.scala
+ensimeIgnoreSourcesInBase in ThisBuild := true
+
+lazy val slickCodegenDeps = Seq(
+  "com.h2database" % "h2" % Settings.versions.h2,
+  "com.typesafe.slick" %% "slick-codegen" % Settings.versions.slick,
+  "com.typesafe.slick" %% "slick" % Settings.versions.slick
+)
+
+/** codegen project containing the customized code generator */
+lazy val codegen = project
+    .settings(
+      scalaVersion := Settings.versions.scala,
+      scalacOptions ++= Settings.scalacOptions,
+      libraryDependencies ++= slickCodegenDeps
+    )
+
+def hasDbCodegen(codegenTask : Def.Initialize[Task[Seq[File]]]): Project => Project =
+  _.settings(
+    libraryDependencies ++= slickCodegenDeps,
+    slick <<= codegenTask, // register manual sbt command
+    sourceGenerators in Compile <+= codegenTask // register automatic code generation on every compile, remove for only manual use
+)
+.dependsOn(codegen)
+
+// code generation task that calls the customized code generator
+lazy val slick = taskKey[Seq[File]]("gen-tables")
+def slickDbCodegenTask(codegen : String, pkg : String) = Def.task {
+  val dir = sourceManaged.value
+  val cp = (dependencyClasspath in Compile).value
+  val r = (runner in Compile).value
+  val s = streams.value
+  val outputDir = (dir / "slick").getPath // place generated files in sbt's managed sources folder
+  val url = "jdbc:h2:mem:test;INIT=runscript from 'project/create.sql'" // connection info for a pre-populated throw-away, in-memory db for this demo, which is freshly initialized on every run
+  val jdbcDriver = "org.h2.Driver"
+  val slickDriver = "slick.driver.H2Driver"
+
+  toError(r.run("spatutorial.codegen.Codegen", cp.files, Array(codegen, slickDriver, jdbcDriver, url, outputDir, pkg), s.log))
+  val fname = outputDir + "/" + pkg.replace(".", "/") + "/Tables.scala"
+  Seq(file(fname))
+}
+
 // a special crossProject for configuring a JS/JVM/shared structure
 lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared"))
+  .configureAll(hasDbCodegen(slickDbCodegenTask("shared", "spatutorial.model")))
   .settings(
     scalaVersion := Settings.versions.scala,
     libraryDependencies ++= Settings.sharedDependencies.value
@@ -47,6 +90,7 @@ lazy val clients = Seq(client)
 
 // instantiate the JVM project for SBT with some additional settings
 lazy val server = (project in file("server"))
+  .configure(hasDbCodegen(slickDbCodegenTask("server", "spatutorial.model")))
   .settings(
     name := "server",
     version := Settings.version,

@@ -38,6 +38,9 @@ object Settings {
     val chartjs = "2.1.3"
 
     val scalajsScripts = "1.0.0"
+
+    val h2 = "1.4.193"
+    val slick = "3.1.1"
   }
 
   /**
