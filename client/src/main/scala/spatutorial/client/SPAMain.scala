@@ -7,7 +7,7 @@ import org.scalajs.dom
 import spatutorial.client.components.GlobalStyles
 import spatutorial.client.logger._
 import spatutorial.client.modules._
-import spatutorial.client.services.SPACircuit
+import spatutorial.client.services.{SPACircuit,RefreshCompanies}
 
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
@@ -24,6 +24,8 @@ object SPAMain extends js.JSApp {
 
   case object TodoLoc extends Loc
 
+  case object CompaniesLoc extends Loc
+
   // configure the router
   val routerConfig = RouterConfigDsl[Loc].buildConfig { dsl =>
     import dsl._
@@ -32,6 +34,7 @@ object SPAMain extends js.JSApp {
     // wrap/connect components to the circuit
     (staticRoute(root, DashboardLoc) ~> renderR(ctl => SPACircuit.wrap(_.motd)(proxy => Dashboard(ctl, proxy)))
       | staticRoute("#todo", TodoLoc) ~> renderR(ctl => todoWrapper(Todo(_)))
+      | staticRoute("#companies", CompaniesLoc) ~> renderR(ctl => SPACircuit.wrap(_.companies)(proxy => Companies(ctl, proxy)))
       ).notFound(redirectToPage(DashboardLoc)(Redirect.Replace))
   }.renderWith(layout)
 
@@ -67,5 +70,8 @@ object SPAMain extends js.JSApp {
     val router = Router(BaseUrl.until_#, routerConfig)
     // tell React to render the router in the document body
     ReactDOM.render(router(), dom.document.getElementById("root"))
+
+    // Send initial action to circuit
+    SPACircuit(RefreshCompanies)
   }
 }

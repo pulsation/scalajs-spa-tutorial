@@ -1,5 +1,7 @@
 package spatutorial.shared
 
+import spatutorial.model._
+
 trait Api {
   // message of the day
   def welcomeMsg(name: String): String
@@ -12,4 +14,6 @@ trait Api {
 
   // delete a Todo
   def deleteTodo(itemId: String): Seq[TodoItem]
+
+  def getAllCompanies(): Seq[Company]
 }

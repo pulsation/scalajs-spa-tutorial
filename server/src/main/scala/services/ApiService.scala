@@ -3,8 +3,17 @@ package services
 import java.util.{UUID, Date}
 
 import spatutorial.shared._
+import spatutorial.model._
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import slick.lifted.TableQuery
+import Tables.profile.api._
 
 class ApiService extends Api {
+
+  val url = "jdbc:h2:mem:test;INIT=runscript from 'project/create.sql'"
+  val db = Database.forURL(url, driver = "org.h2.Driver")
+
   var todos = Seq(
     TodoItem("41424344-4546-4748-494a-4b4c4d4e4f50", 0x61626364, "Wear shirt that says “Life”. Hand out lemons on street corner.", TodoLow, completed = false),
     TodoItem("2", 0x61626364, "Make vanilla pudding. Put in mayo jar. Eat in public.", TodoNormal, completed = false),
@@ -48,4 +57,11 @@ class ApiService extends Api {
     todos = todos.filterNot(_.id == itemId)
     todos
   }
+
+  def getAllCompanies(): Seq[Company] = {
+     Await.result(db.run {
+       Tables.Companies.result
+     }, 20.seconds)
+  }
+
 }
