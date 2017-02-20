@@ -25,17 +25,18 @@ object Settings {
     val scala = "2.11.8"
     val scalaDom = "0.9.1"
     val scalajsReact = "0.11.3"
-    val scalaCSS = "0.5.0"
-    val log4js = "1.4.10"
+    val scalaCSS = "0.5.1"
+    val log4js = "1.4.15"
     val autowire = "0.2.5"
     val booPickle = "1.2.5"
     val diode = "1.1.0"
     val uTest = "0.4.4"
 
-    val react = "15.3.1"
-    val jQuery = "1.11.1"
-    val bootstrap = "3.3.6"
+    val react = "15.4.2"
+    val jQuery = "3.1.1"
+    val bootstrap = "3.3.7"
     val chartjs = "2.1.3"
+    val fontAwesome = "4.7.0"
 
     val scalajsScripts = "1.0.0"
 
@@ -55,8 +56,8 @@ object Settings {
   /** Dependencies only used by the JVM project */
   val jvmDependencies = Def.setting(Seq(
     "com.vmunier" %% "scalajs-scripts" % versions.scalajsScripts,
-    "org.webjars" % "font-awesome" % "4.3.0-1" % Provided,
-    "org.webjars" % "bootstrap" % versions.bootstrap % Provided,
+//    "org.webjars" % "font-awesome" % "4.3.0-1" % Provided,
+//    "org.webjars" % "bootstrap" % versions.bootstrap % Provided,
     "com.lihaoyi" %% "utest" % versions.uTest % Test
   ))
 
@@ -72,12 +73,12 @@ object Settings {
   ))
 
   /** Dependencies for external JS libs that are bundled into a single .js file according to dependency order */
-  val jsDependencies = Def.setting(Seq(
-    "org.webjars.bower" % "react" % versions.react / "react-with-addons.js" minified "react-with-addons.min.js" commonJSName "React",
-    "org.webjars.bower" % "react" % versions.react / "react-dom.js" minified "react-dom.min.js" dependsOn "react-with-addons.js" commonJSName "ReactDOM",
-    "org.webjars" % "jquery" % versions.jQuery / "jquery.js" minified "jquery.min.js",
-    "org.webjars" % "bootstrap" % versions.bootstrap / "bootstrap.js" minified "bootstrap.min.js" dependsOn "jquery.js",
-    "org.webjars" % "chartjs" % versions.chartjs / "Chart.js" minified "Chart.min.js",
-    "org.webjars" % "log4javascript" % versions.log4js / "js/log4javascript_uncompressed.js" minified "js/log4javascript.js"
-  ))
+  val npmDependencies = Def.setting(Seq(
+      "react" -> versions.react,
+      "react-dom" -> versions.react,
+      "log4javascript" -> versions.log4js,
+      "chart.js" -> versions.chartjs,
+      "bootstrap" -> versions.bootstrap,
+      "jquery" -> versions.jQuery,
+      "font-awesome" -> versions.fontAwesome))
 }

@@ -15,4 +15,8 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-gzip" % "1.0.0")
 
+addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.5.0")
+
+addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.5.0")
+
 libraryDependencies += "com.typesafe.slick" %% "slick-codegen" % "3.1.1"

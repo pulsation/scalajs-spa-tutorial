@@ -68,21 +68,19 @@ lazy val client: Project = (project in file("client"))
     scalaVersion := Settings.versions.scala,
     scalacOptions ++= Settings.scalacOptions,
     libraryDependencies ++= Settings.scalajsDependencies.value,
+    npmDevDependencies in Compile += "expose-loader" -> "0.7.1",
+    npmDependencies in Compile ++= Settings.npmDependencies.value,
     // by default we do development build, no eliding
     elideOptions := Seq(),
     scalacOptions ++= elideOptions.value,
-    jsDependencies ++= Settings.jsDependencies.value,
     // RuntimeDOM is needed for tests
     jsDependencies += RuntimeDOM % "test",
-    // yes, we want to package JS dependencies
-    skip in packageJSDependencies := false,
-    // use Scala.js provided launcher code to start the client app
-    persistLauncher := true,
-    persistLauncher in Test := false,
+    persistLauncher := false,
     // use uTest framework for tests
-    testFrameworks += new TestFramework("utest.runner.Framework")
+    testFrameworks += new TestFramework("utest.runner.Framework"),
+    webpackConfigFile := Some(baseDirectory.value / "spa.webpack.config.js")
   )
-  .enablePlugins(ScalaJSPlugin, ScalaJSWeb)
+  .enablePlugins(ScalaJSPlugin, ScalaJSWeb, ScalaJSBundlerPlugin)
   .dependsOn(sharedJS)
 
 // Client projects (just one in this case)
@@ -104,10 +102,13 @@ lazy val server = (project in file("server"))
     scalaJSProjects := clients,
     pipelineStages in Assets := Seq(scalaJSPipeline),
     pipelineStages := Seq(digest, gzip),
+    npmAssets ++= NpmAssets.ofProject(client) { nodeModules => (nodeModules / "bootstrap/dist/css").*** +++
+      (nodeModules / "font-awesome/css").*** +++ (nodeModules / "font-awesome/fonts").***
+    }.value,
     // compress CSS
     LessKeys.compress in Assets := true
   )
-  .enablePlugins(PlayScala)
+  .enablePlugins(PlayScala, WebScalaJSBundlerPlugin)
   .disablePlugins(PlayLayoutPlugin) // use the standard directory layout instead of Play's custom
   .aggregate(clients.map(projectToRef): _*)
   .dependsOn(sharedJVM)
@@ -123,8 +124,6 @@ lazy val ReleaseCmd = Command.command("release") {
     "set elideOptions in client := Seq()" ::
     state
 }
-
-// lazy val root = (project in file(".")).aggregate(client, server)
 
 // loads the Play server project at sbt startup
 onLoad in Global := (Command.process("project server", _: State)) compose (onLoad in Global).value
