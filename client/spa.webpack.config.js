@@ -10,7 +10,8 @@ var globalModules = {
   "log4javascript": "log4javascript",
   "chart.js" : "Chart",
   "jquery" : "jQuery",
-  "bootstrap" : "bootstrap"
+  "bootstrap" : "bootstrap",
+  "semantic-ui-react": "semanticui"
 };
 
 Object.keys(config.entry).forEach(function(key) {

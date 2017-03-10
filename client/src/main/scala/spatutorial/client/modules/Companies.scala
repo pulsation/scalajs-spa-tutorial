@@ -19,13 +19,11 @@ object Companies {
 
   case class State(companiesRowWrapper: ReactConnectProxy[Pot[Seq[Company]]])
 
-  // create the React component for Dashboard
   private val component = ReactComponentB[Props]("Companies")
     // create and store the connect proxy in state for later use
     .initialState_P(props => State(props.proxy.connect(m => m)))
     .renderPS { (_, props, state) =>
       <.div(
-        // header, MessageOfTheDay and chart components
         <.h2("Companies"),
         <.div(state.companiesRowWrapper(CompanyList(_)))
       )

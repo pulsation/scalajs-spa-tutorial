@@ -1,5 +1,6 @@
 import sbt._
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import scalajsbundler.sbtplugin.NpmAssets
 
 /**
  * Application settings. Configure the build for your application here.
@@ -37,6 +38,9 @@ object Settings {
     val bootstrap = "3.3.7"
     val chartjs = "2.1.3"
     val fontAwesome = "4.7.0"
+    val semanticUi = "2.1.8"
+    val scalajsReactComponents = "0.6.0"
+    val semanticUiReact = "0.67.1"
 
     val scalajsScripts = "1.0.0"
 
@@ -56,8 +60,6 @@ object Settings {
   /** Dependencies only used by the JVM project */
   val jvmDependencies = Def.setting(Seq(
     "com.vmunier" %% "scalajs-scripts" % versions.scalajsScripts,
-//    "org.webjars" % "font-awesome" % "4.3.0-1" % Provided,
-//    "org.webjars" % "bootstrap" % versions.bootstrap % Provided,
     "com.lihaoyi" %% "utest" % versions.uTest % Test
   ))
 
@@ -69,7 +71,8 @@ object Settings {
     "me.chrons" %%% "diode" % versions.diode,
     "me.chrons" %%% "diode-react" % versions.diode,
     "org.scala-js" %%% "scalajs-dom" % versions.scalaDom,
-    "com.lihaoyi" %%% "utest" % versions.uTest % Test
+    "com.lihaoyi" %%% "utest" % versions.uTest % Test,
+    "com.olvind" %%% "scalajs-react-components" % versions.scalajsReactComponents
   ))
 
   /** Dependencies for external JS libs that are bundled into a single .js file according to dependency order */
@@ -80,5 +83,18 @@ object Settings {
       "chart.js" -> versions.chartjs,
       "bootstrap" -> versions.bootstrap,
       "jquery" -> versions.jQuery,
-      "font-awesome" -> versions.fontAwesome))
+      "font-awesome" -> versions.fontAwesome,
+      "semantic-ui" -> versions.semanticUi,
+      "semantic-ui-react" -> versions.semanticUiReact
+      ))
+
+  def npmAssets(project: ProjectReference) = {
+    NpmAssets.ofProject(project) {
+      nodeModules =>
+        (nodeModules / "bootstrap/dist/css").*** +++
+        (nodeModules / "font-awesome/css").*** +++
+        (nodeModules / "font-awesome/fonts").*** +++
+        (nodeModules / "semantic-ui/dist").***
+    }
+  }
 }

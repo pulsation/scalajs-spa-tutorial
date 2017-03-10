@@ -13,6 +13,8 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
 import scalacss.Defaults._
 import scalacss.ScalaCssReact._
+import scalacss.internal.mutable.GlobalRegistry
+import chandu0101.scalajs.react.components.{ReactTable,Pager}
 
 @JSExport("SPAMain")
 object SPAMain extends js.JSApp {
@@ -64,8 +66,12 @@ object SPAMain extends js.JSApp {
     log.enableServerLogging("/logging")
     log.info("This message goes to server as well")
 
+    GlobalRegistry.register(ReactTable.DefaultStyle, Pager.DefaultStyle)
+    GlobalRegistry.addToDocumentOnRegistration()
+
     // create stylesheet
     GlobalStyles.addToDocument()
+
     // create the router
     val router = Router(BaseUrl.until_#, routerConfig)
     // tell React to render the router in the document body
