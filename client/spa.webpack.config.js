@@ -9,8 +9,6 @@ var globalModules = {
   "react-dom": "ReactDOM",
   "log4javascript": "log4javascript",
   "chart.js" : "Chart",
-  "jquery" : "jQuery",
-  "bootstrap" : "bootstrap",
   "semantic-ui-react": "semanticui"
 };
 

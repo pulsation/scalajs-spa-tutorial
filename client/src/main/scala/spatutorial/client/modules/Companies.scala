@@ -5,7 +5,7 @@ import diode.react._
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.extra.router.RouterCtl
 import japgolly.scalajs.react.vdom.prefix_<^._
-import spatutorial.client.SPAMain.{Loc, TodoLoc}
+import spatutorial.client.SPAMain.Loc
 import spatutorial.client.components.CompanyList
 import spatutorial.shared.Api
 import spatutorial.model.Company

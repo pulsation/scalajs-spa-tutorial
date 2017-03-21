@@ -34,8 +34,6 @@ object Settings {
     val uTest = "0.4.4"
 
     val react = "15.4.2"
-    val jQuery = "3.1.1"
-    val bootstrap = "3.3.7"
     val chartjs = "2.1.3"
     val fontAwesome = "4.7.0"
     val semanticUi = "2.1.8"
@@ -46,6 +44,7 @@ object Settings {
 
     val h2 = "1.4.193"
     val slick = "3.1.1"
+    val logbackClassic = "1.2.2"
   }
 
   /**
@@ -81,8 +80,6 @@ object Settings {
       "react-dom" -> versions.react,
       "log4javascript" -> versions.log4js,
       "chart.js" -> versions.chartjs,
-      "bootstrap" -> versions.bootstrap,
-      "jquery" -> versions.jQuery,
       "font-awesome" -> versions.fontAwesome,
       "semantic-ui" -> versions.semanticUi,
       "semantic-ui-react" -> versions.semanticUiReact
@@ -91,7 +88,6 @@ object Settings {
   def npmAssets(project: ProjectReference) = {
     NpmAssets.ofProject(project) {
       nodeModules =>
-        (nodeModules / "bootstrap/dist/css").*** +++
         (nodeModules / "font-awesome/css").*** +++
         (nodeModules / "font-awesome/fonts").*** +++
         (nodeModules / "semantic-ui/dist").***

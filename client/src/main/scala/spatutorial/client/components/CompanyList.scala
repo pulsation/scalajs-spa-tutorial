@@ -5,12 +5,11 @@ import diode.react._
 import diode.data.Pot
 import japgolly.scalajs.react._
 import japgolly.scalajs.react.vdom.prefix_<^._
-import spatutorial.client.components.Bootstrap._
 import spatutorial.client.services.UpdateAllCompanies
 import spatutorial.model.Company
 import chandu0101.scalajs.react.components.{ReactTable, ReactMouseEventB}
 import chandu0101.scalajs.react.components.ReactTable.Model
-import chandu0101.scalajs.react.components.semanticui.SuiButton
+import chandu0101.scalajs.react.components.semanticui.{SuiButton,SuiSegment}
 import spatutorial.client.services.RefreshCompanies
 
 object CompanyList {
@@ -18,13 +17,13 @@ object CompanyList {
   val CompanyList = ReactComponentB[ModelProxy[Pot[Seq[Company]]]]("Companies")
   .render_P { proxy =>
 
-    <.div(
+    SuiSegment()(
       proxy().renderPending(_ > 500, _ => <.p("Loading...")),
       proxy().renderFailed(ex => <.p("Failed to load")),
       proxy().render(companies => {
         val companiesData = companies.toVector
           .map(company => Map("name" -> company.name, "id" -> company.id))
-        ReactTable(data = companiesData, columns = List("id", "name"), rowsPerPage = 10)
+        ReactTable(data = companiesData, columns = List("id", "name"), rowsPerPage = 5)
       }
     ),
     SuiButton(primary = true, onClick = { mouseEvent:ReactMouseEventB => { proxy.dispatchCB(RefreshCompanies) }})("Update"))

@@ -4,10 +4,12 @@ import sbt.Project.projectToRef
 scalaVersion in ThisBuild := Settings.versions.scala
 ensimeIgnoreSourcesInBase in ThisBuild := true
 
+
 lazy val slickCodegenDeps = Seq(
   "com.h2database" % "h2" % Settings.versions.h2,
   "com.typesafe.slick" %% "slick-codegen" % Settings.versions.slick,
-  "com.typesafe.slick" %% "slick" % Settings.versions.slick
+  "com.typesafe.slick" %% "slick" % Settings.versions.slick,
+  "ch.qos.logback" % "logback-classic" % Settings.versions.logbackClassic
 )
 
 /** codegen project containing the customized code generator */

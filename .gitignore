@@ -36,3 +36,6 @@ doc/_book
 .ensime
 .ensime_cache/
 .ensime_lucene/
+
+# Vagrant
+.vagrant/
