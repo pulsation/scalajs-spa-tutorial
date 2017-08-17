@@ -33,12 +33,12 @@ object Settings {
     val diode = "1.1.0"
     val uTest = "0.4.4"
 
-    val react = "15.4.2"
+    val react = "15.6.1"
     val chartjs = "2.1.3"
     val fontAwesome = "4.7.0"
-    val semanticUi = "2.1.8"
+    val semanticUi = "2.2.13"
     val scalajsReactComponents = "0.6.0"
-    val semanticUiReact = "0.67.1"
+    val semanticUiReact = "0.71.4"
 
     val scalajsScripts = "1.0.0"
 
